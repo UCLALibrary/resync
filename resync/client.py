@@ -381,11 +381,11 @@ class Client(object):
         # Check all changes have timestamp and record last
         self.last_timestamp = 0
         for resource in src_change_list:
-            if (resource.timestamp is None):
+            if (resource.timestamp is None and resource.change != 'deleted'):
                 raise ClientFatalError(
-                    "Aborting - missing timestamp for change in %s" %
-                    (uri))
-            if (resource.timestamp > self.last_timestamp):
+                    "Aborting - missing timestamp for %s resource '%s' in change list '%s'" %
+                    (resource.change, resource.uri, change_list))
+            if (resource.timestamp is not None and resource.timestamp > self.last_timestamp):
                 self.last_timestamp = resource.timestamp
         # 4. Check that the change list has authority over URIs listed
         # FIXME - What does authority mean for change list? Here use both the
